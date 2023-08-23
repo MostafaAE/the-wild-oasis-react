@@ -1,5 +1,3 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 
 import Input from '../../ui/Input';
@@ -9,7 +7,6 @@ import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import FormRow from '../../ui/FormRow';
 
-import { createEditCabin } from '../../services/apiCabins';
 import { useCreateCabin } from './useCreateCabin';
 import { useEditCabin } from './useEditCabin';
 
@@ -31,13 +28,19 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   function onSubmit(data) {
     const image = typeof data.image === 'string' ? data.image : data.image[0];
     if (isEditSession)
-      editCabin({ newCabinData: { ...data, image: image }, id: editId });
+      editCabin(
+        { newCabinData: { ...data, image: image }, id: editId },
+        {
+          onSuccess: data => {
+            onCloseModal?.();
+          },
+        }
+      );
     else
       createCabin(
         { ...data, image: image },
         {
           onSuccess: data => {
-            console.log(data);
             reset();
             onCloseModal?.();
           },
