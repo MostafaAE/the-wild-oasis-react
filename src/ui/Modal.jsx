@@ -1,5 +1,8 @@
-import styled from "styled-components";
-
+import { HiXMark } from 'react-icons/hi2';
+import styled from 'styled-components';
+import { createPortal } from 'react-dom';
+import { cloneElement, createContext, useContext, useState } from 'react';
+import { useDetectOutsideClick } from '../hooks/useDetectOutsideClick';
 const StyledModal = styled.div`
   position: fixed;
   top: 50%;
@@ -34,7 +37,8 @@ const Button = styled.button`
   position: absolute;
   top: 1.2rem;
   right: 1.9rem;
-
+  height: 32px;
+  width: 32px;
   &:hover {
     background-color: var(--color-grey-100);
   }
@@ -48,3 +52,52 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+
+// 1. Create context
+const ModalContext = createContext();
+
+// 2. Create parent
+function Modal({ children }) {
+  const [openName, setOpenName] = useState('');
+
+  const close = () => setOpenName('');
+  const open = setOpenName;
+
+  return (
+    <ModalContext.Provider value={{ openName, close, open }}>
+      {children}
+    </ModalContext.Provider>
+  );
+}
+
+// 3. Create children
+function Open({ children, opens: openWindowName }) {
+  const { open } = useContext(ModalContext);
+
+  return cloneElement(children, { onClick: () => open(openWindowName) });
+}
+
+function Window({ children, name }) {
+  const { openName, close } = useContext(ModalContext);
+  const ref = useDetectOutsideClick(close);
+  if (openName !== name) return;
+
+  return createPortal(
+    <Overlay>
+      <StyledModal ref={ref}>
+        <Button onClick={close}>
+          <HiXMark />
+        </Button>
+
+        <div>{cloneElement(children, { onCloseModal: close })}</div>
+      </StyledModal>
+    </Overlay>,
+    document.body
+  );
+}
+
+// 4. Add children as properties to the parent
+Modal.Open = Open;
+Modal.Window = Window;
+
+export default Modal;
