@@ -100,9 +100,20 @@ function CabinRow({ cabin }) {
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
           </Modal>
-          <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
+          <Modal>
+            <Modal.Open opens="delete-cabin">
+              <button>
                 <HiTrash />
               </button>
+            </Modal.Open>
+            <Modal.Window name="delete-cabin">
+              <ConfirmDelete
+                resourceName={'cabin'}
+                onConfirm={() => deleteCabin(cabinId)}
+                disabled={isDeleting}
+              />
+            </Modal.Window>
+          </Modal>
         </div>
       </TableRow>
 
