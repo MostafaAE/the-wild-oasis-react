@@ -9,13 +9,14 @@ import Button from '../../ui/Button';
 import ButtonText from '../../ui/ButtonText';
 
 import { useMoveBack } from '../../hooks/useMoveBack';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getBooking } from '../../services/apiBookings';
+import { useNavigate } from 'react-router-dom';
 import Spinner from '../../ui/Spinner';
 import { useBooking } from './useBooking';
 import Empty from '../../ui/Empty';
 import useCheckout from './useCheckout';
+import Modal from '../../ui/Modal';
+import ConfirmDelete from '../../ui/ConfirmDelete';
+import useDeleteBooking from './useDeleteBooking';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -27,6 +28,7 @@ function BookingDetail() {
   const navigate = useNavigate();
   const { isLoading, booking } = useBooking();
   const { isCheckingOut, checkOut } = useCheckout();
+  const { isDeleting, deleteBooking } = useDeleteBooking();
 
   const status = booking?.status;
 
@@ -64,6 +66,27 @@ function BookingDetail() {
             Check out
           </Button>
         )}
+
+        <Modal>
+          <Modal.Open opens="delete-booking">
+            <Button disabled={isDeleting} variation={'danger'}>
+              Delete booking
+            </Button>
+          </Modal.Open>
+
+          <Modal.Window name="delete-booking">
+            <ConfirmDelete
+              resourceName={'booking'}
+              onConfirm={() => {
+                deleteBooking(booking.id, {
+                  onSettled: () => navigate('/bookings'),
+                });
+              }}
+              disabled={isDeleting}
+            />
+          </Modal.Window>
+        </Modal>
+
         <Button variation="secondary" onClick={moveBack}>
           Back
         </Button>
