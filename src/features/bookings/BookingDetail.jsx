@@ -15,6 +15,7 @@ import { getBooking } from '../../services/apiBookings';
 import Spinner from '../../ui/Spinner';
 import { useBooking } from './useBooking';
 import Empty from '../../ui/Empty';
+import useCheckout from './useCheckout';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -25,6 +26,7 @@ const HeadingGroup = styled.div`
 function BookingDetail() {
   const navigate = useNavigate();
   const { isLoading, booking } = useBooking();
+  const { isCheckingOut, checkOut } = useCheckout();
 
   const status = booking?.status;
 
@@ -55,6 +57,11 @@ function BookingDetail() {
         {status === 'unconfirmed' && (
           <Button onClick={() => navigate(`/checkin/${booking.id}`)}>
             Check in
+          </Button>
+        )}
+        {status === 'checked-in' && (
+          <Button onClick={() => checkOut(booking.id)} disabled={isCheckingOut}>
+            Check out
           </Button>
         )}
         <Button variation="secondary" onClick={moveBack}>
