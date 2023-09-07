@@ -13,7 +13,7 @@ function useLogin() {
     },
     onError: err => {
       console.log('Login Error', err);
-      toast.error('Provided email or password are incorrect');
+      toast.error(err.message);
     },
   });
 

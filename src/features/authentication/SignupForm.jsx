@@ -11,10 +11,11 @@ const emailRegex = /\S+@\S+\.\S+/;
 
 function SignupForm() {
   const { register, reset, formState, handleSubmit, getValues } = useForm();
+  const { isSigningUp, signup } = useSignup();
   const { errors } = formState;
 
-  function onSubmit(data) {
-    console.log(data);
+  function onSubmit({ fullName, email, password }) {
+    signup({ fullName, email, password }, { onSettled: data => reset() });
   }
 
   return (
@@ -22,6 +23,7 @@ function SignupForm() {
       <FormRow label="Full name" error={errors?.fullName?.message}>
         <Input
           type="text"
+          disabled={isSigningUp}
           id="fullName"
           {...register('fullName', { required: 'This field is required' })}
         />
@@ -30,6 +32,7 @@ function SignupForm() {
       <FormRow label="Email address" error={errors?.email?.message}>
         <Input
           type="email"
+          disabled={isSigningUp}
           id="email"
           {...register('email', {
             required: 'This field is required',
@@ -47,6 +50,7 @@ function SignupForm() {
       >
         <Input
           type="password"
+          disabled={isSigningUp}
           id="password"
           {...register('password', {
             required: 'This field is required',
@@ -61,6 +65,7 @@ function SignupForm() {
       <FormRow label="Repeat password" error={errors?.passwordConfirm?.message}>
         <Input
           type="password"
+          disabled={isSigningUp}
           id="passwordConfirm"
           {...register('passwordConfirm', {
             required: 'This field is required',
@@ -79,10 +84,12 @@ function SignupForm() {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" disabled={isSigningUp}>
           Cancel
         </Button>
-        <Button>{!isSigningUp ? 'Create new user' : <SpinnerMini />}</Button>
+        <Button disabled={isSigningUp}>
+          {!isSigningUp ? 'Create new user' : <SpinnerMini />}
+        </Button>
       </FormRow>
     </Form>
   );
