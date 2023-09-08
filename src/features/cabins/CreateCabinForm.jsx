@@ -48,13 +48,9 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
       );
   }
 
-  function onError(errors) {
-    // console.log(errors);
-  }
-
   return (
     <Form
-      onSubmit={handleSubmit(onSubmit, onError)}
+      onSubmit={handleSubmit(onSubmit)}
       type={onCloseModal ? 'modal' : 'regular'}
     >
       <FormRow error={errors?.name?.message} label="Cabin name">
@@ -105,7 +101,6 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
           {...register('discount', {
             required: 'This field is required',
             validate: value => {
-              console.log();
               return (
                 Number(value) <= Number(getValues().regularPrice) ||
                 'Discount should be less than regular price'

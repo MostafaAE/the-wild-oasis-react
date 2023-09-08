@@ -14,7 +14,7 @@ function filterCabins(cabins, filterBy) {
 }
 
 function CabinTable() {
-  const { isLoading, error, cabins } = useCabins();
+  const { isLoading, cabins } = useCabins();
   const [searchParams] = useSearchParams();
 
   if (isLoading) return <Spinner />;

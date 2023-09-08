@@ -14,7 +14,7 @@ import { createCabin } from '../../services/apiCabins';
 function CreateCabinForm() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
-  console.log(errors);
+
   const queryClient = useQueryClient();
 
   const { isLoading: isCreating, mutate } = useMutation({
@@ -30,17 +30,11 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    // console.log(data);
-    // console.log({ ...data, image: data.image[0] });
     mutate({ ...data, image: data.image[0] });
   }
 
-  function onError(errors) {
-    // console.log(errors);
-  }
-
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow error={errors?.name?.message} label="Cabin name">
         <Input
           type="text"
@@ -89,7 +83,6 @@ function CreateCabinForm() {
           {...register('discount', {
             required: 'This field is required',
             validate: value => {
-              console.log();
               return (
                 Number(value) <= Number(getValues().regularPrice) ||
                 'Discount should be less than regular price'

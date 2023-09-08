@@ -12,7 +12,6 @@ function useLogin() {
       navigate('/dashboard', { replace: true });
     },
     onError: err => {
-      console.log('Login Error', err);
       toast.error(err.message);
     },
   });

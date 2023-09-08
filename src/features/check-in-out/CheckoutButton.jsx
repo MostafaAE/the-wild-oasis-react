@@ -1,5 +1,4 @@
 import Button from '../../ui/Button';
-import SpinnerMini from '../../ui/SpinnerMini';
 import useCheckout from '../bookings/useCheckout';
 
 function CheckoutButton({ bookingId }) {

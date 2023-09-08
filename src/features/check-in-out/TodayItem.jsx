@@ -48,7 +48,7 @@ function TodayItem({ activity }) {
         </Button>
       )}
       {status === 'checked-in' && (
-        <CheckoutButton bookingId={activity.id}>Check out</CheckoutButton>
+        <CheckoutButton bookingId={id}>Check out</CheckoutButton>
       )}
     </StyledTodayItem>
   );
