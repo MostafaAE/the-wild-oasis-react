@@ -5,6 +5,8 @@ import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
 import useSignup from './useSignup';
 import SpinnerMini from '../../ui/SpinnerMini';
+import useUser from './useUser';
+import toast from 'react-hot-toast';
 
 // Email regex: /\S+@\S+\.\S+/
 const emailRegex = /\S+@\S+\.\S+/;
@@ -13,8 +15,10 @@ function SignupForm() {
   const { register, reset, formState, handleSubmit, getValues } = useForm();
   const { isSigningUp, signup } = useSignup();
   const { errors } = formState;
+  const { isAdmin } = useUser();
 
   function onSubmit({ fullName, email, password }) {
+    if (!isAdmin) return toast.error('This is a demo user');
     signup({ fullName, email, password }, { onSettled: data => reset() });
   }
 

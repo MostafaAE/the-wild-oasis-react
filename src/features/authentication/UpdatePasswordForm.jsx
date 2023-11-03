@@ -5,14 +5,18 @@ import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
 
 import { useUpdateUser } from './useUpdateUser';
+import useUser from './useUser';
+import toast from 'react-hot-toast';
 
 function UpdatePasswordForm() {
   const { register, handleSubmit, formState, getValues, reset } = useForm();
   const { errors } = formState;
 
   const { updateUser, isUpdating } = useUpdateUser();
+  const { isAdmin } = useUser();
 
   function onSubmit({ password }) {
+    if (!isAdmin) return toast.error('This is a demo user');
     updateUser({ password }, { onSuccess: reset });
   }
 
